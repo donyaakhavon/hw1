@@ -1,3 +1,5 @@
+// Testing Git sync: added this comment in VS Code
+
 /*
 CSCI 104: Homework 1 Problem 1
 

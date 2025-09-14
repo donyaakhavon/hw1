@@ -25,6 +25,124 @@ size_t ULListStr::size() const
 }
 
 // WRITE YOUR CODE HERE
+void ULListStr::push_back(const std::string& val) {
+  if(empty()) {
+    Item* nw = new Item();
+    nw->val[nw->first]=val;
+    nw->last = 1;
+    head_ = nw;
+    tail_ = nw;
+    size_++;
+  }
+  else if (tail_->last == ARRSIZE){
+    Item* nw = new Item();
+    nw->val[nw->first] = val;
+    nw->last = 1;
+    tail_->next = nw;
+    nw->prev = tail_;
+    tail_ = nw;
+    size_++;
+  }
+  else {
+    tail_->last++;
+    tail_->val[tail_->last-1] = val;
+    size_++;
+  }
+}
+
+// push front
+
+void ULListStr::push_front(const std::string& val) {
+  // check for head Node
+
+  if(head_ == nullptr) {
+    head_ = tail_ = new Item();
+    head_->first = head_->last = ARRSIZE;
+  }
+  // if no room before head->first, prepend a fresh node whose usable slice starts at end
+
+  if(head_->first == 0) 
+  {
+    Item* nw = new Item();
+    nw->first = nw->last = ARRSIZE;
+    nw->next = head_;
+    head_->prev = nw;
+    head_ = nw;
+  }
+
+  head_->first -= 1;
+  head_->val[head_->first] = val;
+  size_+=1;
+}
+ 
+ void ULListStr::pop_back(){
+  if (empty()) return;
+
+  // remove last element in tail node
+  tail_->last -=1;
+  size_ -=1;
+
+  // if node is now empty, unlink and delete it
+
+  if(tail_->first == tail_->last) {
+    Item* dead = tail_;
+    tail_ = tail_->prev;
+    if (tail_!=nullptr) {
+      tail_->next = nullptr;
+    } 
+    else {
+      head_ = nullptr;
+    }
+    delete dead;
+    }
+ }
+ 
+ void ULListStr::pop_front() {
+  if (empty()) return;
+
+  // remove first element in head node
+  head_->first +=1;
+  size_ -=1;
+
+  if (head_->first == head_->last) {
+    Item* dead = head_;
+    head_ = head_->next;
+    if(head_!=nullptr) {
+      head_->prev = nullptr;
+    } else {
+      tail_ = nullptr;
+    }
+    delete dead;
+  }
+ }
+std::string const & ULListStr::back() const
+{
+  if (!empty())  {
+    return tail_->val[tail_->last - 1];
+  }
+}
+
+std::string const & ULListStr::front() const {
+  if(!empty()) {
+    return head_->val[head_->first];
+  }
+}
+
+std::string* ULListStr::getValAtLoc(size_t loc) const {
+  if (loc >= size_) {
+    return nullptr;
+  }
+  Item* curr = head_;
+  size_t spot = loc;
+  while(curr != nullptr) {
+    if(spot < curr->last - curr ->first) {
+      return &curr->val[curr->first+spot];
+    }
+    spot -= curr->last - curr->first;
+    curr = curr->next;
+  }
+  return nullptr;
+}
 
 void ULListStr::set(size_t loc, const std::string& val)
 {
